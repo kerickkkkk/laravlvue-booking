@@ -11,6 +11,8 @@
         name: 'About',
         mounted() {
             console.log('about component.')
-        }
+            
+        },
+
     }
 </script>
