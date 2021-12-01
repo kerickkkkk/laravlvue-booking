@@ -1,8 +1,13 @@
 <template>
   <div>
-    <h2>title: {{ title }}</h2>
-    <p>content: {{ content }}</p>
-    <p>price: {{price}}</p>
+    <div class="card w-100">
+      <div class="card-body">
+        <router-link :to="{name: 'bookable' , params: {id}}">
+          <h2>title: {{ title }}</h2>
+        </router-link>
+        <p>description: {{ description }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,15 +18,12 @@ export default {
     title:{
       type: String,
     },
-    content:{
+    description:{
       type: String
     },
-    price:{
-      type: Number
+    id:{
+      type:Number
     }
-  },
-  mounted(){
-    // console.log(this.title, this.content, this.price);
   }
 }
 </script>

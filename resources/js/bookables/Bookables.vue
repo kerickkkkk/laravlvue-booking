@@ -5,11 +5,11 @@ Bookables<template>
     </div>
     <template v-else>
       <div class="row">
-      <div :class="`col-${12/columns}`" v-for="(item,i) in list" :key="i">
+      <div class="d-flex align-items-stretch" :class="`col-${12/columns}`" v-for="(item,i) in list" :key="i">
         <BookableListItem 
           :title="item.title" 
-          :content="item.content" 
-          :price="item.price" 
+          :description="item.description" 
+          :id="item.id"
           ></BookableListItem>
         </div>
       </div>
@@ -32,47 +32,23 @@ export default {
     }
   },
   mounted() {
-    this.loading = true;
-    console.log('bookable');
-    setTimeout(() => {
-      this.list = [
-        {
-          title: 'title1',
-          content: 'content1',
-          price: 1000
-        },
-        {
-          title: 'title2',
-          content: 'content2',
-          price: 2000
-        },
-        {
-          title: 'title2',
-          content: 'content2',
-          price: 2000
-        },
-        {
-          title: 'title2',
-          content: 'content2',
-          price: 2000
-        },
-        {
-          title: 'title2',
-          content: 'content2',
-          price: 2000
-        },
-        {
-          title: 'title2',
-          content: 'content2',
-          price: 2000
-        },
-
-      ]
-
-      this.loading = false;
-      console.log('time end ' , this.list);
-    }, 1500);
+    this.fetchData()
   },
+  methods:{
+    fetchData(){
+      this.loading = true;
+
+      axios.get('api/bookables')
+      .then(({data}) => {
+        this.list = data.data;
+        this.loading = false
+      })
+      .catch((e) => {
+        console.log(e);
+        this.loading = false;
+      })
+    }
+  }
 }
 </script>
 

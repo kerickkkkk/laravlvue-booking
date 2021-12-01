@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Bookable;
+use App\Http\Controllers\Api\BookableController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +19,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('bookables', function(){
-    return Bookable::all();
-});
+// Route::get('bookables', function(){
+//     return Bookable::all();
+// });
+
+// Route::get('bookables/{id}', function(Request $request, $id){
+//     return Bookable::findOrFail($id);
+// });
+
+// 8 以上
+// Route::get('bookables', [BookableController::class, 'index']);
+// Route::get('bookables/{id}', [BookableController::class, 'show']);
+
+// 7 
+// Route::get('bookables', 'Api\BookableController@index');
+// Route::get('bookables/{id}', 'Api\BookableController@show');
+
+// resource 
+
+Route::apiResource('bookables', BookableController::class);
+
