@@ -9,6 +9,8 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['from', 'to'];
+    
     public function bookable()
     {   // 不需要 use 是因為 Bookable 和 Booking 同一層
         return $this->belongsTo(Bookable::class);
