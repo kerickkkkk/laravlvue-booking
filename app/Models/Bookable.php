@@ -9,8 +9,15 @@ class Bookable extends Model
 {
     use HasFactory;
 
-    public function booking()
+    public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function availableFor($from, $to):bool
+    {
+        // $bookable->bookings()->betweenDates($data['from'], $data['to'])->count()
+        return 0 === $this->bookings()->betweenDates($from, $to)->count();
+
     }
 }

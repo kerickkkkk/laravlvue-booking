@@ -35,7 +35,7 @@ class BookingTableSeeder extends Seeder
                 ]);
                 $bookings->push($booking);
             }
-            $bookable->booking()->saveMany($bookings);
+            $bookable->bookings()->saveMany($bookings);
             
         });
     }
