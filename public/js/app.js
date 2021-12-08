@@ -2108,15 +2108,72 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      id: null,
       loading: false,
-      data: null
+      from: null,
+      to: null,
+      errors: null,
+      status: null
     };
   },
-  mounted: function mounted() {},
-  methods: {}
+  mounted: function mounted() {
+    this.id = this.$route.params.id;
+  },
+  computed: {
+    hasErrors: function hasErrors() {
+      return 422 === this.status && this.errors !== null;
+    },
+    hasAvailability: function hasAvailability() {
+      return 200 === this.status;
+    },
+    noAvailability: function noAvailability() {
+      return 404 === this.status;
+    }
+  },
+  methods: {
+    check: function check() {
+      var _this = this;
+
+      this.loading = true;
+      this.errors = true;
+      axios.get("/api/bookables/".concat(this.id, "/availability?from=").concat(this.from, "&to=").concat(this.to)).then(function (res) {
+        _this.status = res.status;
+      })["catch"](function (errors) {
+        if (422 === errors.response.status) {
+          _this.errors = errors.response.data.errors;
+        }
+
+        _this.status = errors.response.status;
+      }).then(function () {
+        return _this.loading = false;
+      });
+    },
+    errorFor: function errorFor(field) {
+      return this.hasErrors && this.errors[field] ? this.errors[field] : null;
+    }
+  }
 });
 
 /***/ }),
@@ -38123,49 +38180,130 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("h4", [_vm._v("是否可以借")]),
+  return _c("div", [
+    _c("h4", [
+      _vm._v("是否可以借 \n    "),
+      _vm.hasAvailability
+        ? _c("span", { staticClass: "text-success" }, [_vm._v("可借")])
+        : _vm._e(),
       _vm._v(" "),
-      _c("form", [
-        _c("div", { staticClass: "form-row" }, [
-          _c("div", { staticClass: "form-group col-md-6" }, [
-            _c("label", { attrs: { for: "startTime" } }, [_vm._v("起始時間")]),
+      _vm.noAvailability
+        ? _c("span", { staticClass: "text-danger" }, [_vm._v("沒有可以出借")])
+        : _vm._e(),
+    ]),
+    _vm._v(" "),
+    _c("p", [_vm._v("status: " + _vm._s(_vm.status))]),
+    _vm._v(" "),
+    _c("form", [
+      _c("div", { staticClass: "form-row" }, [
+        _c(
+          "div",
+          { staticClass: "form-group col-md-6" },
+          [
+            _c("label", { attrs: { for: "from" } }, [_vm._v("起始時間")]),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.from,
+                  expression: "from",
+                },
+              ],
               staticClass: "form-control",
-              attrs: { type: "date", id: "startTime" },
+              class: [{ "is-invalid": this.errorFor("from") }],
+              attrs: { type: "date", id: "from" },
+              domProps: { value: _vm.from },
+              on: {
+                keyup: function ($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.check.apply(null, arguments)
+                },
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.from = $event.target.value
+                },
+              },
             }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group col-md-6" }, [
-            _c("label", { attrs: { for: "endTime" } }, [_vm._v("終止時間")]),
             _vm._v(" "),
-            _c("input", {
-              staticClass: "form-control",
-              attrs: { type: "date", id: "endTime" },
+            _vm._l(this.errorFor("from"), function (error, index) {
+              return _c(
+                "div",
+                { key: "from" + index, staticClass: "invalid-feedback" },
+                [_vm._v("\n          " + _vm._s(error) + "\n        ")]
+              )
             }),
-          ]),
-        ]),
+          ],
+          2
+        ),
         _vm._v(" "),
         _c(
-          "button",
-          {
-            staticClass: "btn btn-block btn-secondary",
-            attrs: { type: "submit" },
-          },
-          [_vm._v("送出")]
+          "div",
+          { staticClass: "form-group col-md-6" },
+          [
+            _c("label", { attrs: { for: "to" } }, [_vm._v("終止時間")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.to,
+                  expression: "to",
+                },
+              ],
+              staticClass: "form-control",
+              class: [{ "is-invalid": this.errorFor("to") }],
+              attrs: { type: "date", id: "to" },
+              domProps: { value: _vm.to },
+              on: {
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.to = $event.target.value
+                },
+              },
+            }),
+            _vm._v(" "),
+            _vm._l(this.errorFor("to"), function (error, index) {
+              return _c(
+                "div",
+                { key: "to" + index, staticClass: "invalid-feedback" },
+                [_vm._v("\n          " + _vm._s(error) + "\n        ")]
+              )
+            }),
+          ],
+          2
         ),
       ]),
-    ])
-  },
-]
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-block btn-secondary",
+          attrs: { type: "submit" },
+          on: {
+            click: function ($event) {
+              $event.preventDefault()
+              return _vm.check.apply(null, arguments)
+            },
+          },
+        },
+        [_vm._v("送出")]
+      ),
+    ]),
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
