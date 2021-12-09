@@ -16,7 +16,7 @@ class Booking extends Model
     {   // 不需要 use 是因為 Bookable 和 Booking 同一層
         return $this->belongsTo(Bookable::class);
     }
-    
+
     public function review()
     {
         return $this->hasOne(Review::class);
