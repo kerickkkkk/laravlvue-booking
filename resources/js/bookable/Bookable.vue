@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8">
-        <div class="card">
+        <div class="card mb-5">
           <div class="card-body">
             <template v-if="!loading && data !== null">
               <h4>{{data.id}}</h4>
@@ -14,6 +14,7 @@
             </template>
           </div>
         </div>
+        <ReviewList/>
       </div>
       <div class="col-md-4">
         <Availability />
@@ -24,9 +25,11 @@
 
 <script>
 import Availability from './Availability.vue'
+import ReviewList from './ReviewList.vue'
 export default {
   components:{
-    Availability
+    Availability,
+    ReviewList
   },
   data(){
     return{
