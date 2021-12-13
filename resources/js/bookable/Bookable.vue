@@ -14,10 +14,10 @@
             </template>
           </div>
         </div>
-        <ReviewList/>
+        <ReviewList :bookable-id = "bookableId"/>
       </div>
       <div class="col-md-4">
-        <Availability />
+        <Availability :bookable-id = "bookableId" />
       </div>
     </div>
   </div>
@@ -34,8 +34,12 @@ export default {
   data(){
     return{
       loading: false,
-      data:null
+      data:null,
+      bookableId: null
     }
+  },
+  created() {
+    this.bookableId = this.$route.params.id
   },
   mounted() {
     this.fetchData()
@@ -43,7 +47,7 @@ export default {
   methods:{
     fetchData(){
       this.loading = true;
-      axios.get(`/api/bookables/${this.$route.params.id}`)
+      axios.get(`/api/bookables/${this.bookableId}`)
       .then(({data}) => {
         this.data = data.data;
         this.loading = false

@@ -38,6 +38,11 @@
 
 <script>
 export default {
+  props: {
+    bookableId:{
+      type: String
+    }
+  },
   data(){
     return{
       id: null,
@@ -49,7 +54,8 @@ export default {
     }
   },
   mounted() {
-    this.id = this.$route.params.id;
+    console.log(`availability bookableId${this.bookableId}`);
+    
   },
   computed:{
     hasErrors(){
@@ -66,7 +72,7 @@ export default {
     check(){
       this.loading = true
       this.errors = true
-      axios.get(`/api/bookables/${this.id}/availability?from=${this.from}&to=${this.to}`)
+      axios.get(`/api/bookables/${this.bookableId}/availability?from=${this.from}&to=${this.to}`)
         .then(res =>{
           this.status = res.status
         })

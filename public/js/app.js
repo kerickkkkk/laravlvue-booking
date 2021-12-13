@@ -2128,6 +2128,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    bookableId: {
+      type: String
+    }
+  },
   data: function data() {
     return {
       id: null,
@@ -2139,7 +2144,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.id = this.$route.params.id;
+    console.log("availability bookableId".concat(this.bookableId));
   },
   computed: {
     hasErrors: function hasErrors() {
@@ -2158,7 +2163,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = true;
       this.errors = true;
-      axios.get("/api/bookables/".concat(this.id, "/availability?from=").concat(this.from, "&to=").concat(this.to)).then(function (res) {
+      axios.get("/api/bookables/".concat(this.bookableId, "/availability?from=").concat(this.from, "&to=").concat(this.to)).then(function (res) {
         _this.status = res.status;
       })["catch"](function (errors) {
         if (422 === errors.response.status) {
@@ -2226,8 +2231,12 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       loading: false,
-      data: null
+      data: null,
+      bookableId: null
     };
+  },
+  created: function created() {
+    this.bookableId = this.$route.params.id;
   },
   mounted: function mounted() {
     this.fetchData();
@@ -2237,7 +2246,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      axios.get("/api/bookables/".concat(this.$route.params.id)).then(function (_ref) {
+      axios.get("/api/bookables/".concat(this.bookableId)).then(function (_ref) {
         var data = _ref.data;
         _this.data = data.data;
         _this.loading = false;
@@ -2280,7 +2289,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    bookableId: {
+      type: String
+    }
+  },
+  data: function data() {
+    return {
+      loading: false,
+      reviews: null
+    };
+  },
+  mounted: function mounted() {
+    this.getData();
+    console.log('review', this.bookableId);
+  },
+  methods: {
+    getData: function getData() {
+      var _this = this;
+
+      this.loading = true;
+      axios.get("/api/bookables/".concat(this.bookableId, "/reviews")).then(function (res) {
+        _this.reviews = res.data.data;
+        _this.loading = false;
+      })["catch"](function (e) {
+        console.log(e);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -38464,12 +38507,17 @@ var render = function () {
             ),
           ]),
           _vm._v(" "),
-          _c("ReviewList"),
+          _c("ReviewList", { attrs: { "bookable-id": _vm.bookableId } }),
         ],
         1
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "col-md-4" }, [_c("Availability")], 1),
+      _c(
+        "div",
+        { staticClass: "col-md-4" },
+        [_c("Availability", { attrs: { "bookable-id": _vm.bookableId } })],
+        1
+      ),
     ]),
   ])
 }
@@ -38499,35 +38547,44 @@ var render = function () {
   return _c("div", { staticClass: "px-4 mb-5" }, [
     _c("h6", { staticClass: "h5 text-secondary" }, [_vm._v("評論")]),
     _vm._v(" "),
-    _c(
-      "ul",
-      { staticClass: "list-unstyled d-none d-md-block" },
-      _vm._l(3, function (n) {
-        return _c("li", { key: n, staticClass: "border-bottom mb-3" }, [
-          _vm._m(0, true),
-          _vm._v(" "),
-          _c("p", [_vm._v("評論內容...")]),
-        ])
-      }),
-      0
-    ),
+    _vm.reviews !== null
+      ? _c(
+          "ul",
+          { staticClass: "list-unstyled d-none d-md-block" },
+          _vm._l(_vm.reviews, function (review, index) {
+            return _c(
+              "li",
+              { key: "review + " + index, staticClass: "border-bottom mb-3" },
+              [
+                _c("div", { staticClass: "d-flex justify-content-between" }, [
+                  _c("div", [
+                    _vm._v("\n          阿龍\n          "),
+                    _c("p", [
+                      _vm._v(" " + _vm._s(review.created_at) + " 分鐘前新增"),
+                    ]),
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    _vm._l(review.rating, function (n) {
+                      return _c("span", { key: n }, [
+                        _vm._v("\n            星\n          "),
+                      ])
+                    }),
+                    0
+                  ),
+                ]),
+                _vm._v(" "),
+                _c("p", [_vm._v(_vm._s(review.content))]),
+              ]
+            )
+          }),
+          0
+        )
+      : _vm._e(),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex justify-content-between" }, [
-      _c("div", [
-        _vm._v("阿龍\n          "),
-        _c("span", [_vm._v(" 5 分鐘前新增")]),
-      ]),
-      _vm._v(" "),
-      _c("div", [_vm._v("星星星")]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
